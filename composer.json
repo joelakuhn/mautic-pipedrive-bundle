@@ -6,7 +6,7 @@
   "keywords": ["mautic","plugin","integration"],
   "require": {
     "php": ">=8.0",
-    "mautic/core-lib": "^5.0"
+    "mautic/core-lib": "^6.0"
   },
   "extra": {
     "install-directory-name": "PipedriveBundle"
