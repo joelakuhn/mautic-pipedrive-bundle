@@ -35,7 +35,7 @@ return [
                 'arguments' => [
                     'pipedrive2.sync.repository.fields',
                     'pipedrive2.config',
-                    'session',
+                    'request_stack',
                     'router',
                     'translator',
                 ],
@@ -60,7 +60,7 @@ return [
                 'arguments' => [
                     'pipedrive2.connection.client',
                     'pipedrive2.config',
-                    'session',
+                    'request_stack',
                     'translator',
                 ],
                 'tags'      => [

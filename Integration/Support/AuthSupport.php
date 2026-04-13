@@ -10,14 +10,14 @@ use MauticPlugin\PipedriveBundle\Connection\Client;
 use MauticPlugin\PipedriveBundle\Integration\Config;
 use MauticPlugin\PipedriveBundle\Integration\Pipedrive2Integration;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AuthSupport extends Pipedrive2Integration implements AuthenticationInterface
 {
     private TranslatorInterface $translator;
 
-    public function __construct(private Client $client, private Config $config, private SessionInterface $session, TranslatorInterface $translator)
+    public function __construct(private Client $client, private Config $config, private RequestStack $requestStack, TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
@@ -48,10 +48,10 @@ class AuthSupport extends Pipedrive2Integration implements AuthenticationInterfa
     private function validateState(string $givenState): void
     {
         // Fetch the state stored in ConfigSupport::getAuthorizationUrl()
-        $expectedState = $this->session->get('pipedrive.state');
+        $expectedState = $this->requestStack->getSession()->get('pipedrive.state');
 
         // Clear the state
-        $this->session->remove('pipedrive.state');
+        $this->requestStack->getSession()->remove('pipedrive.state');
 
         // Validate the state
         if (!$expectedState || $expectedState !== $givenState) {

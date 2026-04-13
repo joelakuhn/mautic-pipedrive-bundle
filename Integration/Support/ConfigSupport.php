@@ -23,7 +23,7 @@ use MauticPlugin\PipedriveBundle\Integration\Config;
 use MauticPlugin\PipedriveBundle\Integration\Pipedrive2Integration;
 use MauticPlugin\PipedriveBundle\Sync\Mapping\Field\FieldRepository;
 use MauticPlugin\PipedriveBundle\Sync\Mapping\Manual\MappingManualFactory;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -40,7 +40,7 @@ class ConfigSupport extends Pipedrive2Integration implements ConfigFormInterface
 
     private TranslatorInterface $translator;
 
-    public function __construct(private FieldRepository $fieldRepository, private Config $config, private SessionInterface $session, private RouterInterface $router, TranslatorInterface $translator)
+    public function __construct(private FieldRepository $fieldRepository, private Config $config, private RequestStack $requestStack, private RouterInterface $router, TranslatorInterface $translator)
     {
         $this->translator      = $translator;
     }
@@ -130,7 +130,7 @@ class ConfigSupport extends Pipedrive2Integration implements ConfigFormInterface
     {
         // Generate and set the state in the session so that it can be validated when the authorization process redirects to the redirect URL
         $state = EncryptionHelper::generateKey();
-        $this->session->set('pipedrive.state', $state);
+        $this->requestStack->getSession()->set('pipedrive.state', $state);
 
         $params = [
             'client_id'     => $this->getIntegrationConfiguration()->getApiKeys()['client_id'] ?? '',
